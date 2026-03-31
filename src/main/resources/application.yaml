@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: snakegame-api
+  datasource:
+    url: jdbc:postgresql://aws-1-eu-west-1.pooler.supabase.com:5432/postgres?user=postgres.qqqoekklvuwmzvfoldmx&password=SnakeGame2026
+    driver-class-name: org.postgresql.Driver
+
+
