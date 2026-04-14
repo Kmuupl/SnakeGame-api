@@ -58,5 +58,8 @@ jobs:
         with:
           app-name: 'SnakeGame-api'
           slot-name: 'Production'
-          package: '**/target/*.jar'
+          package: java-app/*.jar
+
+      - name: Check jar
+        run: ls -R java-app
           
