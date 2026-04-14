@@ -66,6 +66,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'SnakeGame-api'
-          slot-name: 'Production'
-          package: app.zip
+          package: target/*.jar
           
