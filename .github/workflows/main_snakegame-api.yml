@@ -35,37 +35,37 @@ jobs:
 
       - name: Check jar
         run: ls -R target
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-  
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: java-app
-          path: java-app
+deploy:
+  runs-on: ubuntu-latest
+  needs: build
+  permissions:
+    id-token: write
+    contents: read
 
-      - name: Check jar
-        run: ls -R java-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6A4B742F4FD9486CB29F77B2402A7027 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_13EE9E777A21410F9A73C3D54E39B112 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_942645CA70474762B0EEBAF42BBE0D95 }}
+  steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v4
+      with:
+        name: java-app
+        path: java-app
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'SnakeGame-api'
-          slot-name: 'Production'
-          package: java-app
+    - name: Check files
+      run: ls -R java-app
 
+    - name: Zip artifact
+      run: zip -r app.zip java-app
 
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6A4B742F4FD9486CB29F77B2402A7027 }}
+        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_13EE9E777A21410F9A73C3D54E39B112 }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_942645CA70474762B0EEBAF42BBE0D95 }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'SnakeGame-api'
+        slot-name: 'Production'
+        package: app.zip
           
